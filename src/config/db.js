@@ -1,14 +1,13 @@
-const  Pool = require('pg').Pool;
+const { Pool } = require('pg');
 require('dotenv').config();
 
 const pool = new Pool({
-    user: process.env.DB_USER,
-    database: process.env.DB_NAME,
-    password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT,
-    host: process.env.DB_HOST
+    connectionString: process.env.DATABASE_URL || `postgres://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
+    ssl: {
+        rejectUnauthorized: false // <--- ESTO ES LO MÁS IMPORTANTE
+    }
 });
 
-pool.on('connect', () => console.log('Conexion exitosa'));
+pool.on('connect', () => console.log('¡Conexión exitosa a la DB de Render!'));
 
 module.exports = pool;
